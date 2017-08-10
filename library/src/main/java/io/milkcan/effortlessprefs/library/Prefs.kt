@@ -1,4 +1,4 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "MemberVisibilityCanPrivate")
 
 package io.milkcan.effortlessprefs.library
 
@@ -112,7 +112,7 @@ object Prefs {
     fun getString(key: String, defValue: String): String? = preferences.getString(key, defValue)
 
     /**
-     * Retrieves a Set of Strings as stored by [.putStringSet].
+     * Retrieves a Set of Strings as stored by [putStringSet].
      * **Note that the native implementation of [SharedPreferences.getStringSet] does not reliably preserve the order of the Strings in the Set.**
      *
      * @param key      The name of the preference to retrieve.
@@ -120,22 +120,22 @@ object Prefs {
      * @return Returns the preference values if they exist, or defValues otherwise.
      * @throws ClassCastException if there is a preference with this name that is not a Set.
      * @see android.content.SharedPreferences.getStringSet
-     * @see .getOrderedStringSet
+     * @see getOrderedStringSet
      */
     fun getStringSet(key: String, defValue: Set<String>): Set<String> =
             preferences.getStringSet(key, defValue)
 
     /**
-     * Retrieves a Set of Strings as stored by [.putOrderedStringSet],
+     * Retrieves a Set of Strings as stored by [putOrderedStringSet],
      * preserving the original order. Note that this implementation is heavier than the native
-     * [.getStringSet] method (which does not guarantee to preserve order).
+     * [getStringSet] method (which does not guarantee to preserve order).
      *
      * @param key      The name of the preference to retrieve.
      * @param defValue Value to return if this preference does not exist.
      * @return Returns the preference value if it exists, or defValues otherwise.
      * @throws ClassCastException if there is a preference with this name that is not a Set of
      * Strings.
-     * @see .getStringSet
+     * @see getStringSet
      */
     fun getOrderedStringSet(key: String, defValue: Set<String>): Set<String> {
         val prefs = preferences
@@ -239,7 +239,7 @@ object Prefs {
      * @param key   The name of the preference to modify.
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putStringSet
-     * @see .putOrderedStringSet
+     * @see putOrderedStringSet
      */
     fun putStringSet(key: String, value: Set<String>) {
         val editor = preferences.edit()
@@ -249,12 +249,13 @@ object Prefs {
 
     /**
      * Stores a Set of Strings, preserving the order.
-     * Note that this method is heavier that the native implementation [.putStringSet] (which does not reliably preserve the order of the Set). To preserve the order of the
+     * Note that this method is heavier that the native implementation [putStringSet]
+     * (which does not reliably preserve the order of the Set). To preserve the order of the
      * items in the Set, the Set implementation must be one that as an iterator with predictable
      * order, such as [LinkedHashSet].
      *
      * @param key   The name of the preference to modify.
-     * @param set The new set for the preference.
+     * @param value The new value for the preference.
      * @see putStringSet
      * @see getOrderedStringSet
      */
@@ -379,7 +380,10 @@ object Prefs {
          */
         @SuppressLint("WorldReadableFiles", "WorldWriteableFiles")
         fun setMode(mode: Int): Builder {
-            if (mode == ContextWrapper.MODE_PRIVATE || mode == ContextWrapper.MODE_WORLD_READABLE || mode == ContextWrapper.MODE_WORLD_WRITEABLE || mode == ContextWrapper.MODE_MULTI_PROCESS) {
+            if (mode == ContextWrapper.MODE_PRIVATE
+                    || mode == ContextWrapper.MODE_WORLD_READABLE
+                    || mode == ContextWrapper.MODE_WORLD_WRITEABLE
+                    || mode == ContextWrapper.MODE_MULTI_PROCESS) {
                 mMode = mode
             } else {
                 throw RuntimeException("The mode in the SharedPreference can only be set too ContextWrapper.MODE_PRIVATE, ContextWrapper.MODE_WORLD_READABLE, ContextWrapper.MODE_WORLD_WRITEABLE or ContextWrapper.MODE_MULTI_PROCESS")

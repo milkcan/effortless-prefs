@@ -1,4 +1,4 @@
-EasyPrefs
+Effortless Prefs
 ===
 
 A small library containing a wrapper/helper for the shared preferences of Android.
@@ -55,7 +55,7 @@ which internally use Java's LinkedHashSet to retain a predictable iteration orde
 Grab the latest dependency through Gradle:
 ```Groovy
 dependencies {
-    compile milkcan
+    implementation 'io.milkcan.effortlesspreferences:1.0.0'
 }
 ```
 
