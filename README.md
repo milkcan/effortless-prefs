@@ -1,7 +1,9 @@
 Effortless Prefs
 ===
 
-A small library containing a wrapper/helper for the shared preferences of Android.
+A lightweight wrapper for Android's SharedPreferences -- written in Kotlin.
+
+This library is a fork of EasyPrefs. For the original Java library, [click here.](https://github.com/Pixplicity/EasyPrefs)
 
 With this library you can initialize the shared preference inside the onCreate of the Application class of your app.
 
