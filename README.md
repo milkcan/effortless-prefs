@@ -3,17 +3,18 @@ Effortless Prefs
 
 A lightweight wrapper for Android's SharedPreferences -- written in Kotlin.
 
-This library is a fork of EasyPrefs. For the original Java library, [click here.](https://github.com/Pixplicity/EasyPrefs)
+This library is a fork of EasyPrefs by Pixplicity. For the original Java library, [click here.](https://github.com/Pixplicity/EasyPrefs)
 
-With this library you can initialize the shared preference inside the onCreate of the Application class of your app.
+With this library you can initialize a global instance of SharedPreferences inside your Application class.
 
 ```Java
-public class PrefsApplication extends Application {
+public class App extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        // Initialize the Prefs class
+        
+        // Initialize Effortless Prefs
         new Prefs.Builder()
                 .setContext(this)
                 .setMode(ContextWrapper.MODE_PRIVATE)
@@ -26,17 +27,17 @@ public class PrefsApplication extends Application {
 
 # Usage
 
-After initialization, you can use simple one-line methods to save values to the shared preferences anywhere in your app, such as:
+After initialization, you can use simple one-line methods to save values to SharedPreferences anywhere in your app, such as:
 
 - `Prefs.putString(key, string)`
 - `Prefs.putLong(key, long)`
 - `Prefs.putBoolean(key, boolean)` 
 
-Retrieving data from the Shared Preferences can be as simple as:
+Retrieving data from SharedPreferences can be as simple as:
 
     String data = Prefs.getString(key, default value)
 
-If the shared preferences contains the key, the string will be obtained, otherwise the method returns the default string provided. No need for those pesky `contains()` or `data != null` checks!
+If SharedPreferences contains the key, the string will be obtained, otherwise the method returns the default string provided. No need for those pesky `contains()` or `data != null` checks!
 
 For some examples, see the sample App.
 
