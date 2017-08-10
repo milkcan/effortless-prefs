@@ -55,7 +55,7 @@ which internally use Java's LinkedHashSet to retain a predictable iteration orde
 Grab the latest dependency through Gradle:
 ```Groovy
 dependencies {
-    compile 'com.pixplicity.easyprefs:library:1.9.0'
+    compile milkcan
 }
 ```
 

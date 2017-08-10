@@ -1,10 +1,9 @@
-package com.pixplicity.easyprefs.sample;
-
+package io.milkcan.effortlessprefs.sample;
 
 import android.app.Application;
 import android.content.ContextWrapper;
 
-import com.pixplicity.easyprefs.library.Prefs;
+import io.milkcan.effortlessprefs.library.Prefs;
 
 public class PrefsApplication extends Application {
 
@@ -19,4 +18,5 @@ public class PrefsApplication extends Application {
                 .setUseDefaultSharedPreference(true)
                 .build();
     }
+
 }

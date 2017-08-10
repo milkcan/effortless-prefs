@@ -1,4 +1,4 @@
-package com.pixplicity.easyprefs.sample;
+package io.milkcan.effortlessprefs.sample;
 
 import android.test.ApplicationTestCase;
 

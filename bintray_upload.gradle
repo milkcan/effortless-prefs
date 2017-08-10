@@ -30,7 +30,7 @@ bintray {
 
     pkg {
         repo = 'android'
-        userOrg = 'pixplicity'
+        userOrg = 'milkcan'
         name = ARTIFACT_ID
         desc = POM_DESCRIPTION
         issueTrackerUrl = POM_ISSUE_URL
