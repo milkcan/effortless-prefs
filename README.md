@@ -7,21 +7,21 @@ This library is a fork of EasyPrefs by Pixplicity. For the original Java library
 
 With this library you can initialize a global instance of SharedPreferences inside your Application class.
 
-```Java
-public class App extends Application {
+```Kotlin
+class PrefsApplication : Application() {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    override fun onCreate() {
+        super.onCreate()
         
         // Initialize Effortless Prefs
-        new Prefs.Builder()
+        Prefs.Builder()
                 .setContext(this)
                 .setMode(ContextWrapper.MODE_PRIVATE)
-                .setPrefsName(getPackageName())
+                .setPrefsName(packageName)
                 .setUseDefaultSharedPreference(true)
-                .build();
+                .build()
     }
+
 }
 ```
 

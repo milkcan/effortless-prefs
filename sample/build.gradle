@@ -1,4 +1,9 @@
-apply plugin: 'com.android.application'
+apply {
+    plugin 'com.android.application'
+    plugin 'kotlin-android'
+    plugin 'kotlin-android-extensions'
+    plugin 'kotlin-kapt'
+}
 
 android {
     compileSdkVersion Integer.parseInt(COMPILE_SDK)
@@ -10,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.milkcan.easyprefs.sample"
+        applicationId "io.milkcan.effortlessprefs.sample"
         minSdkVersion Integer.parseInt(MIN_SDK)
         targetSdkVersion Integer.parseInt(COMPILE_SDK)
         versionCode Integer.parseInt(VERSION_CODE)
@@ -32,4 +37,6 @@ dependencies {
 
     implementation 'com.jakewharton:butterknife:8.7.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
