@@ -36,14 +36,14 @@ bintray {
         issueTrackerUrl = POM_ISSUE_URL
         vcsUrl = POM_URL
         licenses = ['Apache-2.0']
-        labels = ['android']
+        labels = ['android', 'kotlin']
         publicDownloadNumbers = true
         dryRun = false // Whether to run this as dry-run, without deploying
         publish = false // If version should be auto published after an bintray_upload
         version {
             name = VERSION_NAME
             released  = new Date()
-            desc = "Gene-rate library stable release ${VERSION_NAME}"
+            desc = "Stable release ${VERSION_NAME}"
         }
     }
 }

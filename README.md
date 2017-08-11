@@ -58,7 +58,7 @@ which internally use Java's LinkedHashSet to retain a predictable iteration orde
 Grab the latest dependency through Gradle:
 ```Groovy
 dependencies {
-    implementation 'io.milkcan.effortlesspreferences:1.0.0'
+    implementation 'io.milkcan.effortlessprefs:1.0.0'
 }
 ```
 
