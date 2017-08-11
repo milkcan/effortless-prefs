@@ -53,12 +53,14 @@ and
 
 which internally use Java's LinkedHashSet to retain a predictable iteration order. These methods have the added benefit of adding the missing functionality of storing sets to pre-Honeycomb devices.
 
+# Coming Soon
+RxJava support, JSON helpers, and more!
 
 # Download
 Grab the latest dependency through Gradle:
 ```Groovy
 dependencies {
-    implementation 'io.milkcan.effortlessprefs:1.0.0'
+    implementation "io.milkcan:effortless-prefs:1.0.0"
 }
 ```
 
