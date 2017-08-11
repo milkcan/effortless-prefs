@@ -1,6 +1,9 @@
 apply {
     plugin 'com.android.library'
     plugin 'kotlin-android'
+    plugin 'com.github.dcendents.android-maven'
+    plugin 'maven-publish'
+    plugin 'com.jfrog.bintray'
 }
 
 android {
@@ -26,4 +29,99 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
-apply from: file('../bintray_upload.gradle')
+group = GROUP
+version = VERSION_NAME
+
+publishing {
+    publications {
+        Production(MavenPublication) {
+            artifact("$buildDir/outputs/aar/library-release.aar")
+            artifact(sourcesJar)
+            groupId GROUP
+            artifactId ARTIFACT_ID
+            version VERSION_NAME
+        }
+    }
+}
+
+bintray {
+    user = project.getLocalProperty("bintray.user")
+    key = project.getLocalProperty("bintray.apikey")
+
+    pkg {
+        repo = 'maven'
+        name = ARTIFACT_ID
+        desc = POM_DESCRIPTION
+        issueTrackerUrl = POM_ISSUE_URL
+        vcsUrl = POM_URL
+        licenses = ['Apache-2.0']
+        labels = ['android', 'kotlin']
+        publicDownloadNumbers = true
+        dryRun = false // Whether to run this as dry-run, without deploying
+        publish = false // If version should be auto published after an bintray_upload
+        version {
+            name = VERSION_NAME
+            released = new Date()
+            desc = "Stable release ${VERSION_NAME}"
+        }
+    }
+    publish = false
+    publications = ['Production']
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name project.name
+                url POM_URL
+                description POM_DESCRIPTION
+
+                groupId GROUP
+                artifactId ARTIFACT_ID
+                version VERSION_NAME
+
+                licenses {
+                    license {
+                        name POM_LICENCE_NAME
+                        url POM_LICENCE_URL
+                        distribution POM_LICENCE_DIST
+                    }
+                }
+                developers {
+                    developer {
+                        id POM_DEVELOPER_ID_0
+                        name POM_DEVELOPER_NAME_0
+                        email POM_DEVELOPER_EMAIL_0
+                    }
+                }
+                scm {
+                    connection POM_SCM_CONNECTION
+                    developerConnection POM_SCM_DEV_CONNECTION
+                    url POM_URL
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+def getLocalProperty(String propertyName) {
+    def propsFile = rootProject.file('local.properties')
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        return props[propertyName]
+    } else {
+        return ""
+    }
+}
