@@ -64,7 +64,7 @@ dependencies {
 }
 ```
 
-If you prefer Maven or downloading the AAR manually; please check [the Bintray project page](https://bintray.com/pixplicity/android/EasyPrefs).
+For older versions, [see Bintray](https://bintray.com/bachhuberdesign/maven/effortless-prefs).
 
 # License
 
