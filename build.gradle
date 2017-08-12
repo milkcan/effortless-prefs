@@ -1,16 +1,17 @@
 buildscript {
     ext.kotlin_version = "1.1.4-eap-77"
+    ext.plugin_version = "3.0.0-beta2"
 
     repositories {
         jcenter()
-        maven { url 'https://dl.google.com/dl/android/maven2/' }
+        google()
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1' }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta1'
+        classpath "com.android.tools.build:gradle:$plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5' // Used to generate a POM file
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
 }
 
@@ -21,7 +22,7 @@ plugins {
 allprojects {
     repositories {
         jcenter()
-        maven { url 'https://dl.google.com/dl/android/maven2/' }
+        google()
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1' }
     }
 }

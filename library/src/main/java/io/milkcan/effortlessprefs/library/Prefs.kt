@@ -15,9 +15,13 @@ object Prefs {
     private const val DEFAULT_SUFFIX = "_preferences"
     private const val LENGTH = "#LENGTH"
     private var mPrefs: SharedPreferences? = null
+    private var prefSerializer: PrefSerializer? = null
 
-    private fun initPrefs(context: Context, prefsName: String, mode: Int) {
+    private fun initPrefs(context: Context, prefsName: String, mode: Int, prefSerializer: PrefSerializer?) {
         mPrefs = context.getSharedPreferences(prefsName, mode)
+
+        prefSerializer?.setPreferences(mPrefs!!)
+        this.prefSerializer = prefSerializer
     }
 
     /**
@@ -151,6 +155,10 @@ object Prefs {
             return set
         }
         return defValue
+    }
+
+    fun <T> getObject(key: String, defaultValue: T) {
+        prefSerializer!!.getObject(key, defaultValue)
     }
 
     /**
@@ -346,6 +354,7 @@ object Prefs {
         private var mContext: Context? = null
         private var mMode = -1
         private var mUseDefault = false
+        private var prefSerializer: PrefSerializer? = null
 
         /**
          * Set the filename of the SharedPreference instance. Usually this is the application's
@@ -405,6 +414,11 @@ object Prefs {
             return this
         }
 
+        fun setPrefSerializer(prefSerializer: PrefSerializer): Builder {
+            this.prefSerializer = prefSerializer
+            return this
+        }
+
         /**
          * Initialize the SharedPreference instance to used in the application.
          *
@@ -427,7 +441,7 @@ object Prefs {
                 mMode = ContextWrapper.MODE_PRIVATE
             }
 
-            Prefs.initPrefs(mContext!!, mKey!!, mMode)
+            Prefs.initPrefs(mContext!!, mKey!!, mMode, prefSerializer)
         }
     }
 
