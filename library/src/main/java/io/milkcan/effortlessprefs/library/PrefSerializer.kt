@@ -1,7 +1,6 @@
 package io.milkcan.effortlessprefs.library
 
 import android.content.SharedPreferences
-import kotlin.reflect.KClass
 
 /**
  * @author Eric Bachhuber
