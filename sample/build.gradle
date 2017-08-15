@@ -32,11 +32,17 @@ android {
 
 dependencies {
     implementation project(':library')
+    implementation project(':gson-serializer')
+    implementation project(':moshi-serializer')
 
     implementation 'com.android.support:appcompat-v7:26.0.1'
 
-    implementation 'com.jakewharton:butterknife:8.7.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    // Effortless Android
+    implementation "io.milkcan:effortless-android:$effortless_android_version"
+
+    // JSON Parsers
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+    implementation "com.google.code.gson:gson:$gson_version"
 }

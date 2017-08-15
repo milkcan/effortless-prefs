@@ -1,7 +1,8 @@
-package io.milkcan.effortlessprefs.library
+package io.milkcan.effortlessprefs.moshiserializer
 
 import android.content.SharedPreferences
 import com.squareup.moshi.Moshi
+import io.milkcan.effortlessprefs.library.PrefSerializer
 
 /**
  * @author Eric Bachhuber
@@ -35,7 +36,14 @@ class MoshiSerializer(val moshi: Moshi) : PrefSerializer {
     }
 
     override fun <T : Any> getObject(key: String): T? {
-        TODO("Not yet implemented.")
+        val adapter = moshi.adapter<T>(T::class.java)
+        val json = prefs.getString(key, "")
+
+        return if (json.isNullOrBlank()) {
+            null
+        } else {
+            adapter.fromJson(json) as T
+        }
     }
 
 }
