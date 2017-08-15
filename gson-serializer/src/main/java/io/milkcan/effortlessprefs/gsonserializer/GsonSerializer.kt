@@ -1,8 +1,9 @@
-package io.milkcan.effortlessprefs.library
+package io.milkcan.effortlessprefs.gsonserializer
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import io.milkcan.effortlessprefs.library.PrefSerializer
 
 /**
  * @author Eric Bachhuber
