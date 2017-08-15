@@ -178,8 +178,8 @@ object Prefs {
      * @param key
      * @return
      */
-    fun <T : Any> getObject(key: String): T? {
-        return prefSerializer!!.getObject(key)
+    fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
+        return prefSerializer!!.getObject(key, clazz)
     }
 
     /**

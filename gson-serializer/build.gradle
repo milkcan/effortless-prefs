@@ -1,5 +1,9 @@
 apply {
     plugin 'com.android.library'
+    plugin 'kotlin-android'
+    plugin 'com.github.dcendents.android-maven'
+    plugin 'maven-publish'
+    plugin 'com.jfrog.bintray'
 }
 
 android {
