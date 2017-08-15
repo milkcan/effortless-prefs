@@ -15,9 +15,13 @@ object Prefs {
     private const val DEFAULT_SUFFIX = "_preferences"
     private const val LENGTH = "#LENGTH"
     private var mPrefs: SharedPreferences? = null
+    private var prefSerializer: PrefSerializer? = null
 
-    private fun initPrefs(context: Context, prefsName: String, mode: Int) {
+    private fun initPrefs(context: Context, prefsName: String, mode: Int, prefSerializer: PrefSerializer?) {
         mPrefs = context.getSharedPreferences(prefsName, mode)
+
+        prefSerializer?.setSharedPreferenceInstance(mPrefs!!)
+        this.prefSerializer = prefSerializer
     }
 
     /**
@@ -128,7 +132,7 @@ object Prefs {
     /**
      * Retrieves a Set of Strings as stored by [putOrderedStringSet],
      * preserving the original order. Note that this implementation is heavier than the native
-     * [getStringSet] method (which does not guarantee to preserve order).
+     * [getStringSet] function (which does not guarantee to preserve order).
      *
      * @param key      The name of the preference to retrieve.
      * @param defValue Value to return if this preference does not exist.
@@ -151,6 +155,31 @@ object Prefs {
             return set
         }
         return defValue
+    }
+
+    /**
+     * @param key
+     * @param value
+     */
+    fun putObject(key: String, value: Any) {
+        prefSerializer!!.putObject(key, value)
+    }
+
+    /**
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    fun <T : Any> getObject(key: String, defaultValue: T): T {
+        return prefSerializer!!.getObject(key, defaultValue)
+    }
+
+    /**
+     * @param key
+     * @return
+     */
+    fun <T : Any> getObject(key: String): T? {
+        return prefSerializer!!.getObject(key)
     }
 
     /**
@@ -249,7 +278,7 @@ object Prefs {
 
     /**
      * Stores a Set of Strings, preserving the order.
-     * Note that this method is heavier that the native implementation [putStringSet]
+     * Note that this function is heavier that the native implementation [putStringSet]
      * (which does not reliably preserve the order of the Set). To preserve the order of the
      * items in the Set, the Set implementation must be one that as an iterator with predictable
      * order, such as [LinkedHashSet].
@@ -320,7 +349,7 @@ object Prefs {
      * Removed all the stored keys and values.
      *
      * @return the [Editor] for chaining. The changes have already been committed/applied
-     * through the execution of this method.
+     * through the execution of this function.
      * @see android.content.SharedPreferences.Editor.clear
      */
     fun clear(): Editor {
@@ -337,8 +366,8 @@ object Prefs {
     fun edit(): Editor = preferences.edit()
 
     /**
-     * Builder class for the EasyPrefs instance. You only have to call this once in the Application
-     * onCreate. And in the rest of the code base you can call Prefs.method name.
+     * Builder class for the [Prefs] instance. This should only be called once in your application's
+     * [android.app.Application.onCreate] function.
      */
     class Builder {
 
@@ -346,6 +375,7 @@ object Prefs {
         private var mContext: Context? = null
         private var mMode = -1
         private var mUseDefault = false
+        private var prefSerializer: PrefSerializer? = null
 
         /**
          * Set the filename of the SharedPreference instance. Usually this is the application's
@@ -405,6 +435,11 @@ object Prefs {
             return this
         }
 
+        fun setPrefSerializer(prefSerializer: PrefSerializer): Builder {
+            this.prefSerializer = prefSerializer
+            return this
+        }
+
         /**
          * Initialize the SharedPreference instance to used in the application.
          *
@@ -427,7 +462,7 @@ object Prefs {
                 mMode = ContextWrapper.MODE_PRIVATE
             }
 
-            Prefs.initPrefs(mContext!!, mKey!!, mMode)
+            Prefs.initPrefs(mContext!!, mKey!!, mMode, prefSerializer)
         }
     }
 
