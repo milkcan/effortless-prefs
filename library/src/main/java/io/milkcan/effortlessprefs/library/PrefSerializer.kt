@@ -1,6 +1,7 @@
 package io.milkcan.effortlessprefs.library
 
 import android.content.SharedPreferences
+import kotlin.reflect.KClass
 
 /**
  * @author Eric Bachhuber
@@ -33,6 +34,6 @@ interface PrefSerializer {
      * @param key
      * @return
      */
-    fun <T : Any> getObject(key: String): T?
+    fun <T : Any> getObject(key: String, clazz: Class<T>): T?
 
 }

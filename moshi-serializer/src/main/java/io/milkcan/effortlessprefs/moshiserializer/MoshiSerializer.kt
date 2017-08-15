@@ -35,8 +35,8 @@ class MoshiSerializer(val moshi: Moshi) : PrefSerializer {
         }
     }
 
-    override fun <T : Any> getObject(key: String): T? {
-        val adapter = moshi.adapter<T>(T::class.java)
+    override fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
+        val adapter = moshi.adapter<T>(clazz)
         val json = prefs.getString(key, "")
 
         return if (json.isNullOrBlank()) {

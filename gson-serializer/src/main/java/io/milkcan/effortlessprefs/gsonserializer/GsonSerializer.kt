@@ -2,7 +2,6 @@ package io.milkcan.effortlessprefs.gsonserializer
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import io.milkcan.effortlessprefs.library.PrefSerializer
 
 /**
@@ -34,15 +33,13 @@ class GsonSerializer(val gson: Gson) : PrefSerializer {
         }
     }
 
-    override fun <T : Any> getObject(key: String): T? {
+    override fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
         val json = prefs.getString(key, "")
-
-        val typeToken = object : TypeToken<T>() {}.type
 
         return if (json.isNullOrBlank()) {
             null
         } else {
-            gson.fromJson(json, typeToken)
+            gson.fromJson(json, clazz)
         }
     }
 
