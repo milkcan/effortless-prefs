@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
-import android.text.TextUtils
 import java.util.*
 
 object Prefs {
@@ -271,15 +270,22 @@ object Prefs {
     }
 
     /**
-     * @param key
-     * @param defaultValue
-     * @return
+     * Retrieves an object stored with [prefSerializer] of type [defaultValue].
+     *
+     * @param key      The name of the preference to retrieve.
+     * @param defaultValue Value to return if this preference does not exist.
+     * @return Returns the object value if it exists, or [defaultValue].
+     * @see io.milkcan.effortlessprefs.library.PrefSerializer
      */
     fun <T : Any> getObject(key: String, defaultValue: T): T = prefSerializer!!.getObject(key, defaultValue)
 
     /**
-     * @param key
-     * @return
+     * Retrieves an object stored with [prefSerializer] of type [clazz].
+     *
+     * @param key      The name of the preference to retrieve.
+     * @param clazz
+     * @return Returns the object value if it exists, or null.
+     * @see io.milkcan.effortlessprefs.library.PrefSerializer
      */
     fun <T : Any> getObject(key: String, clazz: Class<T>): T? = prefSerializer!!.getObject(key, clazz)
 
@@ -395,7 +401,7 @@ object Prefs {
 
         if (preferences.contains(key + LENGTH)) {
             // First read what the set was
-            stringSetLength = preferences!!.getInt(key + LENGTH, -1)
+            stringSetLength = preferences.getInt(key + LENGTH, -1)
         }
 
         editor.putInt(key + LENGTH, value.size)
@@ -450,7 +456,7 @@ object Prefs {
      * Checks if a value is stored for the given key.
      *
      * @param key The name of the preference to check.
-     * @return `true` if the storage contains this key value, `false` otherwise.
+     * @return True if the storage contains this key value, false otherwise.
      * @see android.content.SharedPreferences.contains
      */
     operator fun contains(key: String): Boolean = preferences.contains(key)
@@ -560,7 +566,7 @@ object Prefs {
                 throw RuntimeException("Context not set, please set context before building the Prefs instance.")
             }
 
-            if (TextUtils.isEmpty(mKey)) {
+            if (mKey.isNullOrEmpty()) {
                 mKey = mContext!!.packageName
             }
 
