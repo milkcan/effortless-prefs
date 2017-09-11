@@ -113,7 +113,7 @@ object Prefs {
      * @throws ClassCastException if there is a preference with this name that is not a String.
      * @see android.content.SharedPreferences.getString
      */
-    fun getString(key: String, defValue: String): String? = preferences.getString(key, defValue)
+    fun getString(key: String, defValue: String): String = preferences.getString(key, defValue)
 
     /**
      * Retrieves a Set of Strings as stored by [putStringSet].

@@ -1,6 +1,6 @@
 buildscript {
     ext.kotlin_version = "1.1.4"
-    ext.plugin_version = "3.0.0-beta2"
+    ext.plugin_version = "3.0.0-beta5"
     ext.moshi_version = "1.5.0"
     ext.gson_version = "2.8.1"
     ext.effortless_android_version = "1.0.3"
@@ -8,7 +8,6 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.google.com' }
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1' }
     }
 
     dependencies {
@@ -23,7 +22,6 @@ allprojects {
     repositories {
         jcenter()
         maven { url 'https://maven.google.com' }
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1' }
     }
 }
 
