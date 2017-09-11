@@ -26,9 +26,11 @@ android {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile 'com.google.code.gson:gson:2.8.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
+
+def ARTIFACT_ID = "effortless-prefs"
+def DESCRIPTION = "A Kotlin-based wrapper for Android's SharedPreferences"
 
 group = GROUP
 version = VERSION_NAME
@@ -52,21 +54,17 @@ bintray {
     pkg {
         repo = 'maven'
         name = ARTIFACT_ID
-        desc = POM_DESCRIPTION
+        desc = DESCRIPTION
         issueTrackerUrl = POM_ISSUE_URL
         vcsUrl = POM_URL
         licenses = ['Apache-2.0']
         labels = ['android', 'kotlin']
-        publicDownloadNumbers = true
-        dryRun = false // Whether to run this as dry-run, without deploying
-        publish = false // If version should be auto published after an bintray_upload
         version {
             name = VERSION_NAME
             released = new Date()
             desc = "Stable release ${VERSION_NAME}"
         }
     }
-    publish = false
     publications = ['Production']
 }
 
@@ -77,7 +75,7 @@ install {
                 packaging 'aar'
                 name project.name
                 url POM_URL
-                description POM_DESCRIPTION
+                description DESCRIPTION
 
                 groupId GROUP
                 artifactId ARTIFACT_ID
@@ -114,15 +112,4 @@ task sourcesJar(type: Jar) {
 
 artifacts {
     archives sourcesJar
-}
-
-def getLocalProperty(String propertyName) {
-    def propsFile = rootProject.file('local.properties')
-    if (propsFile.exists()) {
-        def props = new Properties()
-        props.load(new FileInputStream(propsFile))
-        return props[propertyName]
-    } else {
-        return ""
-    }
 }

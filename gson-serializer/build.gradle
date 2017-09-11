@@ -1,21 +1,16 @@
 apply {
-    plugin 'com.android.application'
+    plugin 'com.android.library'
     plugin 'kotlin-android'
-    plugin 'kotlin-android-extensions'
-    plugin 'kotlin-kapt'
+    plugin 'com.github.dcendents.android-maven'
+    plugin 'maven-publish'
+    plugin 'com.jfrog.bintray'
 }
 
 android {
     compileSdkVersion Integer.parseInt(COMPILE_SDK)
     buildToolsVersion BUILD_TOOLS
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
-
     defaultConfig {
-        applicationId "io.milkcan.effortlessprefs.sample"
         minSdkVersion Integer.parseInt(MIN_SDK)
         targetSdkVersion Integer.parseInt(COMPILE_SDK)
         versionCode Integer.parseInt(VERSION_CODE)
@@ -31,18 +26,14 @@ android {
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':library')
-    implementation project(':gson-serializer')
-    implementation project(':moshi-serializer')
 
-    implementation 'com.android.support:appcompat-v7:26.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
-    // Effortless Android
-    implementation "io.milkcan:effortless-android:$effortless_android_version"
-
-    // JSON Parsers
-    implementation "com.squareup.moshi:moshi:$moshi_version"
     implementation "com.google.code.gson:gson:$gson_version"
 }

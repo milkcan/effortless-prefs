@@ -1,28 +1,37 @@
 buildscript {
-    ext.kotlin_version = "1.1.4-eap-77"
-    ext.plugin_version = "3.0.0-beta2"
+    ext.kotlin_version = "1.1.4"
+    ext.plugin_version = "3.0.0-beta5"
+    ext.moshi_version = "1.5.0"
+    ext.gson_version = "2.8.1"
+    ext.effortless_android_version = "1.0.3"
 
     repositories {
         jcenter()
-        google()
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1' }
+        maven { url 'https://maven.google.com' }
     }
 
     dependencies {
         classpath "com.android.tools.build:gradle:$plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
-}
-
-plugins {
-    id "com.jfrog.bintray" version "1.7.3"
 }
 
 allprojects {
     repositories {
         jcenter()
-        google()
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1' }
+        maven { url 'https://maven.google.com' }
+    }
+}
+
+def getLocalProperty(String propertyName) {
+    def propsFile = rootProject.file('local.properties')
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        return props[propertyName]
+    } else {
+        throw new Exception("No property found for $propertyName")
     }
 }

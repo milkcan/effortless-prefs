@@ -1,15 +1,17 @@
-package io.milkcan.effortlessprefs.library
+@file:JvmName("MoshiSerializer")
+
+package io.milkcan.effortlessprefs.moshiserializer
 
 import android.content.SharedPreferences
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.Moshi
+import io.milkcan.effortlessprefs.library.PrefSerializer
 
 /**
  * @author Eric Bachhuber
  * @version 1.1.0
  * @since 1.1.0
  */
-class GsonSerializer(val gson: Gson) : PrefSerializer {
+class MoshiSerializer(val moshi: Moshi) : PrefSerializer {
 
     lateinit var prefs: SharedPreferences
 
@@ -18,30 +20,31 @@ class GsonSerializer(val gson: Gson) : PrefSerializer {
     }
 
     override fun putObject(key: String, value: Any) {
-        val json = gson.toJson(value)
+        val adapter = moshi.adapter<Any>(value::class.java)
+        val json = adapter.toJson(value)
 
         prefs.edit().putString(key, json).apply()
     }
 
     override fun <T : Any> getObject(key: String, defaultValue: T): T {
+        val adapter = moshi.adapter<T>(defaultValue::class.java)
         val json = prefs.getString(key, "")
 
         return if (json.isNullOrBlank()) {
             defaultValue
         } else {
-            gson.fromJson(json, defaultValue::class.java)
+            adapter.fromJson(json) as T
         }
     }
 
-    override fun <T : Any> getObject(key: String): T? {
+    override fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
+        val adapter = moshi.adapter<T>(clazz)
         val json = prefs.getString(key, "")
-
-        val typeToken = object : TypeToken<T>() {}.type
 
         return if (json.isNullOrBlank()) {
             null
         } else {
-            gson.fromJson(json, typeToken)
+            adapter.fromJson(json) as T
         }
     }
 

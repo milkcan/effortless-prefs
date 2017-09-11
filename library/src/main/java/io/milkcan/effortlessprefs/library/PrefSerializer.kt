@@ -33,6 +33,6 @@ interface PrefSerializer {
      * @param key
      * @return
      */
-    fun <T : Any> getObject(key: String): T?
+    fun <T : Any> getObject(key: String, clazz: Class<T>): T?
 
 }
