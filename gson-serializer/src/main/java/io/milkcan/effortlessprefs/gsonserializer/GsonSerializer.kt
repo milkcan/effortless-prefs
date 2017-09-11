@@ -1,3 +1,5 @@
+@file:JvmName("GsonSerializer")
+
 package io.milkcan.effortlessprefs.gsonserializer
 
 import android.content.SharedPreferences

@@ -1,3 +1,5 @@
+@file:JvmName("MoshiSerializer")
+
 package io.milkcan.effortlessprefs.moshiserializer
 
 import android.content.SharedPreferences
@@ -6,8 +8,8 @@ import io.milkcan.effortlessprefs.library.PrefSerializer
 
 /**
  * @author Eric Bachhuber
- * @version 1.0.0
- * @since 1.0.0
+ * @version 1.1.0
+ * @since 1.1.0
  */
 class MoshiSerializer(val moshi: Moshi) : PrefSerializer {
 

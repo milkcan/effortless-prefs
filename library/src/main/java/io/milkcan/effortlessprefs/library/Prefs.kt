@@ -1,3 +1,4 @@
+@file:JvmName("Prefs")
 @file:Suppress("unused", "MemberVisibilityCanPrivate")
 
 package io.milkcan.effortlessprefs.library
@@ -9,6 +10,11 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import java.util.*
 
+/**
+ * @author Eric Bachhuber
+ * @version 1.1.0
+ * @since 1.0.0
+ */
 object Prefs {
 
     private const val DEFAULT_SUFFIX = "_preferences"
