@@ -1,3 +1,9 @@
+def ARTIFACT_ID = "effortless-prefs"
+def DESCRIPTION = "A Kotlin-based wrapper for Android's SharedPreferences"
+
+group = GROUP
+version = VERSION_NAME
+
 apply {
     plugin 'com.android.library'
     plugin 'kotlin-android'
@@ -28,12 +34,6 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
-
-def ARTIFACT_ID = "effortless-prefs"
-def DESCRIPTION = "A Kotlin-based wrapper for Android's SharedPreferences"
-
-group = GROUP
-version = VERSION_NAME
 
 publishing {
     publications {
