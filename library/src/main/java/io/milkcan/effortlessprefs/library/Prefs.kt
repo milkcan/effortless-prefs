@@ -9,6 +9,11 @@ import android.content.SharedPreferences.Editor
 import android.text.TextUtils
 import java.util.*
 
+/**
+ * @author Eric Bachhuber
+ * @version 1.1.0
+ * @since 1.0.0
+ */
 object Prefs {
 
     private const val DEFAULT_SUFFIX = "_preferences"
