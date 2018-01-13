@@ -117,7 +117,7 @@ object Prefs {
      * @throws ClassCastException if there is a preference with this name that is not a String.
      * @see android.content.SharedPreferences.getString
      */
-    fun getString(key: String, defaultValue: String): String? = preferences.getString(key, defaultValue)
+    fun getString(key: String, defaultValue: String): String = preferences.getString(key, defaultValue)
 
     /**
      * Retrieves a Set of Strings as stored by [putStringSet].
@@ -131,20 +131,6 @@ object Prefs {
      * @see android.content.SharedPreferences.getStringSet
      */
     fun getStringSet(key: String, defaultValue: Set<String>): Set<String> = preferences.getStringSet(key, defaultValue)
-
-    /**
-     * Stores an Object.
-     *
-     * @param key The name of the preference to modify.
-     * @param value The new value for the preference.
-     * @see io.milkcan.effortlessprefs.library.PrefSerializer
-     */
-    fun putObject(key: String, value: Any) {
-        return if (prefSerializer != null) {
-            prefSerializer!!.putObject(key, value)
-        } else throw IllegalStateException("PrefSerializer not correctly instantiated. Please call " +
-                "Builder.setPrefSerializer().build() in your Application class onCreate().")
-    }
 
     /**
      * Retrieves a stored Object.
@@ -174,6 +160,20 @@ object Prefs {
     fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
         return if (prefSerializer != null) {
             prefSerializer!!.getObject(key, clazz)
+        } else throw IllegalStateException("PrefSerializer not correctly instantiated. Please call " +
+                "Builder.setPrefSerializer().build() in your Application class onCreate().")
+    }
+
+    /**
+     * Stores an Object.
+     *
+     * @param key The name of the preference to modify.
+     * @param value The new value for the preference.
+     * @see io.milkcan.effortlessprefs.library.PrefSerializer
+     */
+    fun putObject(key: String, value: Any) {
+        return if (prefSerializer != null) {
+            prefSerializer!!.putObject(key, value)
         } else throw IllegalStateException("PrefSerializer not correctly instantiated. Please call " +
                 "Builder.setPrefSerializer().build() in your Application class onCreate().")
     }
