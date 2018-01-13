@@ -2,12 +2,12 @@
 
 package io.milkcan.effortlessprefs.library
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.text.TextUtils
-import java.util.*
 
 /**
  * @author Eric Bachhuber
@@ -18,13 +18,13 @@ object Prefs {
 
     private const val DEFAULT_SUFFIX = "_preferences"
     private const val LENGTH = "#LENGTH"
-    private var mPrefs: SharedPreferences? = null
+    private var sharedPreferences: SharedPreferences? = null
     private var prefSerializer: PrefSerializer? = null
 
     private fun initPrefs(context: Context, prefsName: String, mode: Int, prefSerializer: PrefSerializer?) {
-        mPrefs = context.getSharedPreferences(prefsName, mode)
+        sharedPreferences = context.getSharedPreferences(prefsName, mode)
 
-        prefSerializer?.setSharedPreferenceInstance(mPrefs!!)
+        prefSerializer?.setSharedPreferenceInstance(sharedPreferences!!)
         this.prefSerializer = prefSerializer
     }
 
@@ -32,15 +32,16 @@ object Prefs {
      * Returns the underlying SharedPreference instance
      *
      * @return an instance of the SharedPreference
-     * @throws RuntimeException if SharedPreference instance has not been instantiated yet.
+     * @throws IllegalStateException if SharedPreference instance has not been instantiated yet.
      */
     val preferences: SharedPreferences
         get() {
-            if (mPrefs != null) {
-                return mPrefs as SharedPreferences
+            if (sharedPreferences != null) {
+                return sharedPreferences as SharedPreferences
             }
-            throw RuntimeException(
-                    "Prefs class not correctly instantiated. Please call Builder.setContext().build() in the Application class onCreate.")
+            throw IllegalStateException(
+                    "Prefs class not correctly instantiated. Please call Builder.setContext().build() " +
+                            "in your Application class onCreate().")
         }
 
     /**
@@ -128,45 +129,18 @@ object Prefs {
      * @return Returns the preference values if they exist, or defValues otherwise.
      * @throws ClassCastException if there is a preference with this name that is not a Set.
      * @see android.content.SharedPreferences.getStringSet
-     * @see getOrderedStringSet
      */
-    fun getStringSet(key: String, defValue: Set<String>): Set<String> =
-            preferences.getStringSet(key, defValue)
-
-    /**
-     * Retrieves a Set of Strings as stored by [putOrderedStringSet],
-     * preserving the original order. Note that this implementation is heavier than the native
-     * [getStringSet] function (which does not guarantee to preserve order).
-     *
-     * @param key      The name of the preference to retrieve.
-     * @param defValue Value to return if this preference does not exist.
-     * @return Returns the preference value if it exists, or defValues otherwise.
-     * @throws ClassCastException if there is a preference with this name that is not a Set of
-     * Strings.
-     * @see getStringSet
-     */
-    fun getOrderedStringSet(key: String, defValue: Set<String>): Set<String> {
-        val prefs = preferences
-
-        if (prefs.contains(key + LENGTH)) {
-            val set = LinkedHashSet<String>()
-
-            val stringSetLength = prefs.getInt(key + LENGTH, -1)
-            if (stringSetLength >= 0) {
-                (0 until stringSetLength).mapTo(set) { prefs.getString("$key[$it]", null) }
-            }
-
-            return set
-        }
-        return defValue
-    }
+    fun getStringSet(key: String, defValue: Set<String>): Set<String> = preferences.getStringSet(key, defValue)
 
     /**
      * @param key
      * @param value
      */
     fun putObject(key: String, value: Any) {
-        prefSerializer!!.putObject(key, value)
+        return if (prefSerializer != null) {
+            prefSerializer!!.putObject(key, value)
+        } else throw IllegalStateException("PrefSerializer not correctly instantiated. Please call " +
+                "Builder.setPrefSerializer().build() in your Application class onCreate().")
     }
 
     /**
@@ -175,7 +149,10 @@ object Prefs {
      * @return
      */
     fun <T : Any> getObject(key: String, defaultValue: T): T {
-        return prefSerializer!!.getObject(key, defaultValue)
+        return if (prefSerializer != null) {
+            prefSerializer!!.getObject(key, defaultValue)
+        } else throw IllegalStateException("PrefSerializer not correctly instantiated. Please call " +
+                "Builder.setPrefSerializer().build() in your Application class onCreate().")
     }
 
     /**
@@ -183,7 +160,10 @@ object Prefs {
      * @return
      */
     fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
-        return prefSerializer!!.getObject(key, clazz)
+        return if (prefSerializer != null) {
+            prefSerializer!!.getObject(key, clazz)
+        } else throw IllegalStateException("PrefSerializer not correctly instantiated. Please call " +
+                "Builder.setPrefSerializer().build() in your Application class onCreate().")
     }
 
     /**
@@ -193,11 +173,7 @@ object Prefs {
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putLong
      */
-    fun putLong(key: String, value: Long) {
-        val editor = preferences.edit()
-        editor.putLong(key, value)
-        editor.apply()
-    }
+    fun putLong(key: String, value: Long) = preferences.edit().putLong(key, value).apply()
 
     /**
      * Stores an integer value.
@@ -206,11 +182,7 @@ object Prefs {
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putInt
      */
-    fun putInt(key: String, value: Int) {
-        val editor = preferences.edit()
-        editor.putInt(key, value)
-        editor.apply()
-    }
+    fun putInt(key: String, value: Int) = preferences.edit().putInt(key, value).apply()
 
     /**
      * Stores a double value as a long raw bits value.
@@ -220,9 +192,9 @@ object Prefs {
      * @see android.content.SharedPreferences.Editor.putLong
      */
     fun putDouble(key: String, value: Double) {
-        val editor = preferences.edit()
-        editor.putLong(key, java.lang.Double.doubleToRawLongBits(value))
-        editor.apply()
+        preferences.edit()
+                .putLong(key, java.lang.Double.doubleToRawLongBits(value))
+                .apply()
     }
 
     /**
@@ -232,11 +204,7 @@ object Prefs {
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putFloat
      */
-    fun putFloat(key: String, value: Float) {
-        val editor = preferences.edit()
-        editor.putFloat(key, value)
-        editor.apply()
-    }
+    fun putFloat(key: String, value: Float) = preferences.edit().putFloat(key, value).apply()
 
     /**
      * Stores a boolean value.
@@ -245,11 +213,7 @@ object Prefs {
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putBoolean
      */
-    fun putBoolean(key: String, value: Boolean) {
-        val editor = preferences.edit()
-        editor.putBoolean(key, value)
-        editor.apply()
-    }
+    fun putBoolean(key: String, value: Boolean) = preferences.edit().putBoolean(key, value).apply()
 
     /**
      * Stores a String value.
@@ -258,11 +222,7 @@ object Prefs {
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putString
      */
-    fun putString(key: String, value: String) {
-        val editor = preferences.edit()
-        editor.putString(key, value)
-        editor.apply()
-    }
+    fun putString(key: String, value: String) = preferences.edit().putString(key, value).apply()
 
     /**
      * Stores a Set of Strings.
@@ -272,49 +232,8 @@ object Prefs {
      * @param key   The name of the preference to modify.
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putStringSet
-     * @see putOrderedStringSet
      */
-    fun putStringSet(key: String, value: Set<String>) {
-        val editor = preferences.edit()
-        editor.putStringSet(key, value)
-        editor.apply()
-    }
-
-    /**
-     * Stores a Set of Strings, preserving the order.
-     * Note that this function is heavier that the native implementation [putStringSet]
-     * (which does not reliably preserve the order of the Set). To preserve the order of the
-     * items in the Set, the Set implementation must be one that as an iterator with predictable
-     * order, such as [LinkedHashSet].
-     *
-     * @param key   The name of the preference to modify.
-     * @param value The new value for the preference.
-     * @see putStringSet
-     * @see getOrderedStringSet
-     */
-    fun putOrderedStringSet(key: String, value: Set<String>) {
-        val editor = preferences.edit()
-        var stringSetLength = 0
-        if (mPrefs!!.contains(key + LENGTH)) {
-            // First read what the set was
-            stringSetLength = mPrefs!!.getInt(key + LENGTH, -1)
-        }
-
-        editor.putInt(key + LENGTH, value.size)
-        var i = 0
-        value.forEach { v ->
-            editor.putString("$key[$i]", v)
-            i++
-        }
-
-        while (i < stringSetLength) {
-            // Remove any remaining set
-            editor.remove("$key[$i]")
-            i++
-        }
-
-        editor.apply()
-    }
+    fun putStringSet(key: String, value: Set<String>) = preferences.edit().putStringSet(key, value).apply()
 
     /**
      * Removes a preference value.
@@ -322,25 +241,7 @@ object Prefs {
      * @param key The name of the preference to remove.
      * @see android.content.SharedPreferences.Editor.remove
      */
-    fun remove(key: String) {
-        val prefs = preferences
-        val editor = prefs.edit()
-
-        // TODO: remove
-        if (prefs.contains(key + LENGTH)) {
-            // Workaround for pre-HC's lack of StringSets
-            val stringSetLength = prefs.getInt(key + LENGTH, -1)
-            if (stringSetLength >= 0) {
-                editor.remove(key + LENGTH)
-                for (i in 0 until stringSetLength) {
-                    editor.remove("$key[$i]")
-                }
-            }
-        }
-
-        editor.remove(key)
-        editor.apply()
-    }
+    fun remove(key: String) = preferences.edit().remove(key).apply()
 
     /**
      * Checks if a value is stored for the given key.
@@ -361,6 +262,7 @@ object Prefs {
     fun clear(): Editor {
         val editor = preferences.edit().clear()
         editor.apply()
+
         return editor
     }
 
@@ -369,6 +271,7 @@ object Prefs {
      *
      * @return An Editor
      */
+    @SuppressLint("CommitPrefEdits")
     fun edit(): Editor = preferences.edit()
 
     /**
@@ -376,6 +279,7 @@ object Prefs {
      * [android.app.Application.onCreate] function.
      */
     class Builder {
+
         private var key: String? = null
         private var context: Context? = null
         private var useDefault = false
@@ -442,6 +346,7 @@ object Prefs {
 
             Prefs.initPrefs(context!!, key!!, ContextWrapper.MODE_PRIVATE, prefSerializer)
         }
+
     }
 
 }
