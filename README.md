@@ -34,9 +34,9 @@ After initialization, you can use simple one-line methods to save values to Shar
 
 Retrieving data from SharedPreferences can be as simple as:
 
-    String data = Prefs.getString(key, default value)
+    val data = Prefs.getString(key, defaultValue)
 
-If SharedPreferences contains the key, the string will be obtained, otherwise the method returns the default string provided. No need for those pesky `contains()` or `data != null` checks!
+If SharedPreferences contains the key, the String will be obtained, otherwise the default value is returned.
 
 # Download
 Grab the latest dependency through Gradle:
