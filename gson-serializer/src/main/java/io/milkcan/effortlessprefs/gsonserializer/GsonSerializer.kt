@@ -3,7 +3,9 @@
 package io.milkcan.effortlessprefs.gsonserializer
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import io.milkcan.effortlessprefs.library.PrefSerializer
 
 /**
@@ -11,7 +13,11 @@ import io.milkcan.effortlessprefs.library.PrefSerializer
  * @version 1.1.0
  * @since 1.1.0
  */
-class GsonSerializer(val gson: Gson) : PrefSerializer {
+class GsonSerializer(private val gson: Gson) : PrefSerializer {
+
+    companion object {
+        @JvmStatic val TAG: String = GsonSerializer::class.java.simpleName
+    }
 
     lateinit var prefs: SharedPreferences
 
@@ -28,20 +34,22 @@ class GsonSerializer(val gson: Gson) : PrefSerializer {
     override fun <T : Any> getObject(key: String, defaultValue: T): T {
         val json = prefs.getString(key, "")
 
-        return if (json.isNullOrBlank()) {
-            defaultValue
-        } else {
+        return try {
             gson.fromJson(json, defaultValue::class.java)
+        } catch (ex: JsonSyntaxException) {
+            Log.d(TAG, "Error deserializing object, returning default value. ${ex.message}", ex)
+            defaultValue
         }
     }
 
     override fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
         val json = prefs.getString(key, "")
 
-        return if (json.isNullOrBlank()) {
-            null
-        } else {
+        return try {
             gson.fromJson(json, clazz)
+        } catch (ex: JsonSyntaxException) {
+            Log.d(TAG, "Error deserializing object, returning null. ${ex.message}", ex)
+            null
         }
     }
 
