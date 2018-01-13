@@ -1,13 +1,12 @@
 package io.milkcan.effortlessprefs.sample
 
 import android.app.Application
-import android.content.ContextWrapper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.squareup.moshi.Moshi
 import io.milkcan.effortlessprefs.gsonserializer.GsonSerializer
-import io.milkcan.effortlessprefs.moshiserializer.MoshiSerializer
 import io.milkcan.effortlessprefs.library.Prefs
+import io.milkcan.effortlessprefs.moshiserializer.MoshiSerializer
 
 class App : Application() {
 
@@ -26,9 +25,8 @@ class App : Application() {
         // Initialize Effortless Prefs
         Prefs.Builder()
                 .setContext(this)
-                .setMode(ContextWrapper.MODE_PRIVATE)
                 .setPrefsName(packageName)
-                .setUseDefaultSharedPreference(true)
+                .setUseDefaultSharedPreference(false)
                 .setPrefSerializer(gsonSerializer)
                 .build()
     }
