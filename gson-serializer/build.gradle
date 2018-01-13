@@ -1,3 +1,9 @@
+def ARTIFACT_ID = "effortless-prefs-gson"
+def DESCRIPTION = "Gson serialization extension for effortless-prefs"
+
+group = GROUP
+version = VERSION_NAME
+
 apply {
     plugin 'com.android.library'
     plugin 'kotlin-android'
@@ -36,4 +42,83 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     implementation "com.google.code.gson:gson:$gson_version"
+}
+
+publishing {
+    publications {
+        Production(MavenPublication) {
+            artifact("$buildDir/outputs/aar/gson-serializer-release.aar")
+            artifact(sourcesJar)
+            groupId GROUP
+            artifactId ARTIFACT_ID
+            version VERSION_NAME
+        }
+    }
+}
+
+bintray {
+    user = project.getLocalProperty("bintray.user")
+    key = project.getLocalProperty("bintray.apikey")
+
+    pkg {
+        repo = 'maven'
+        name = ARTIFACT_ID
+        desc = DESCRIPTION
+        issueTrackerUrl = POM_ISSUE_URL
+        vcsUrl = POM_URL
+        licenses = ['Apache-2.0']
+        labels = ['android', 'kotlin']
+        version {
+            name = VERSION_NAME
+            released = new Date()
+            desc = "Stable release ${VERSION_NAME}"
+        }
+    }
+    publications = ['Production']
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name project.name
+                url POM_URL
+                description DESCRIPTION
+
+                groupId GROUP
+                artifactId ARTIFACT_ID
+                version VERSION_NAME
+
+                licenses {
+                    license {
+                        name POM_LICENCE_NAME
+                        url POM_LICENCE_URL
+                        distribution POM_LICENCE_DIST
+                    }
+                }
+                developers {
+                    developer {
+                        id POM_DEVELOPER_ID_0
+                        name POM_DEVELOPER_NAME_0
+                        email POM_DEVELOPER_EMAIL_0
+                    }
+                }
+                scm {
+                    connection POM_SCM_CONNECTION
+                    developerConnection POM_SCM_DEV_CONNECTION
+                    url POM_URL
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
 }
