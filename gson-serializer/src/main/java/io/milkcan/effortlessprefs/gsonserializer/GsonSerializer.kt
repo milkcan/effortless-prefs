@@ -25,12 +25,26 @@ class GsonSerializer(private val gson: Gson) : PrefSerializer {
         prefs = sharedPreferences
     }
 
+    /**
+     * Stores an Object using Gson.
+     *
+     * @param key The name of the preference to modify.
+     * @param value The new value for the preference.
+     */
     override fun putObject(key: String, value: Any) {
         val json = gson.toJson(value)
 
         prefs.edit().putString(key, json).apply()
     }
 
+    /**
+     * Retrieves a stored Object.
+     *
+     * @param key The name of the preference to retrieve.
+     * @param defaultValue Value to return if this preference does not exist.
+     * @return Deserialized representation of the object at [key], or [defaultValue] if unavailable
+     * or a [JsonSyntaxException] is thrown while deserializing.
+     */
     override fun <T : Any> getObject(key: String, defaultValue: T): T {
         val json = prefs.getString(key, "")
 
@@ -42,6 +56,14 @@ class GsonSerializer(private val gson: Gson) : PrefSerializer {
         }
     }
 
+    /**
+     * Retrieves a stored Object.
+     *
+     * @param key The name of the preference to retrieve.
+     * @param clazz Class that the preference will be deserialized as.
+     * @return Deserialized representation of the object at [key], or null if unavailable or a
+     * [JsonSyntaxException] is thrown while deserializing.
+     */
     override fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
         val json = prefs.getString(key, "")
 

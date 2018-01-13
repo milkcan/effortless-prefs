@@ -25,6 +25,12 @@ class MoshiSerializer(private val moshi: Moshi) : PrefSerializer {
         prefs = sharedPreferences
     }
 
+    /**
+     * Stores an Object using Moshi.
+     *
+     * @param key The name of the preference to modify.
+     * @param value The new value for the preference.
+     */
     override fun putObject(key: String, value: Any) {
         val adapter = moshi.adapter<Any>(value::class.java)
         val json = adapter.toJson(value)
@@ -32,6 +38,14 @@ class MoshiSerializer(private val moshi: Moshi) : PrefSerializer {
         prefs.edit().putString(key, json).apply()
     }
 
+    /**
+     * Retrieves a stored Object.
+     *
+     * @param key The name of the preference to retrieve.
+     * @param defaultValue Value to return if this preference does not exist.
+     * @return Deserialized representation of the object at [key], or [defaultValue] if unavailable
+     * or an [IOException] is thrown while deserializing.
+     */
     override fun <T : Any> getObject(key: String, defaultValue: T): T {
         val adapter = moshi.adapter<T>(defaultValue::class.java)
         val json = prefs.getString(key, "")
@@ -44,6 +58,14 @@ class MoshiSerializer(private val moshi: Moshi) : PrefSerializer {
         }
     }
 
+    /**
+     * Retrieves a stored Object.
+     *
+     * @param key The name of the preference to retrieve.
+     * @param clazz Class that the preference will be deserialized as.
+     * @return Deserialized representation of the object at [key], or null if unavailable or an
+     * [IOException] is thrown while deserializing.
+     */
     override fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
         val adapter = moshi.adapter<T>(clazz)
         val json = prefs.getString(key, "")

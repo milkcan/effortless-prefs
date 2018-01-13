@@ -29,10 +29,10 @@ object Prefs {
     }
 
     /**
-     * Returns the underlying SharedPreference instance
+     * Returns the underlying SharedPreferences instance
      *
-     * @return an instance of the SharedPreference
-     * @throws IllegalStateException if SharedPreference instance has not been instantiated yet.
+     * @return an instance of the SharedPreferences
+     * @throws IllegalStateException if SharedPreferences instance has not been instantiated yet.
      */
     val preferences: SharedPreferences
         get() {
@@ -45,8 +45,7 @@ object Prefs {
         }
 
     /**
-     * @return Returns a map containing a list of pairs key/value representing
-     * the preferences.
+     * @return Key/value map of all stored preferences.
      * @see android.content.SharedPreferences.getAll
      */
     val all: Map<String, *>
@@ -56,85 +55,89 @@ object Prefs {
      * Retrieves a stored int value.
      *
      * @param key      The name of the preference to retrieve.
-     * @param defValue Value to return if this preference does not exist.
-     * @return Returns the preference value if it exists, or defValue.
+     * @param defaultValue Value to return if this preference does not exist.
+     * @return Returns the preference value if it exists, or defaultValue.
      * @throws ClassCastException if there is a preference with this name that is not
      * an int.
      * @see android.content.SharedPreferences.getInt
      */
-    fun getInt(key: String, defValue: Int): Int = preferences.getInt(key, defValue)
+    fun getInt(key: String, defaultValue: Int): Int = preferences.getInt(key, defaultValue)
 
     /**
      * Retrieves a stored boolean value.
      *
      * @param key      The name of the preference to retrieve.
-     * @param defValue Value to return if this preference does not exist.
-     * @return Returns the preference value if it exists, or defValue.
+     * @param defaultValue Value to return if this preference does not exist.
+     * @return Returns the preference value if it exists, or defaultValue.
      * @throws ClassCastException if there is a preference with this name that is not a boolean.
      * @see android.content.SharedPreferences.getBoolean
      */
-    fun getBoolean(key: String, defValue: Boolean): Boolean = preferences.getBoolean(key, defValue)
+    fun getBoolean(key: String, defaultValue: Boolean): Boolean = preferences.getBoolean(key, defaultValue)
 
     /**
      * Retrieves a stored long value.
      *
      * @param key      The name of the preference to retrieve.
-     * @param defValue Value to return if this preference does not exist.
-     * @return Returns the preference value if it exists, or defValue.
+     * @param defaultValue Value to return if this preference does not exist.
+     * @return Returns the preference value if it exists, or defaultValue.
      * @throws ClassCastException if there is a preference with this name that is not a long.
      * @see android.content.SharedPreferences.getLong
      */
-    fun getLong(key: String, defValue: Long): Long = preferences.getLong(key, defValue)
+    fun getLong(key: String, defaultValue: Long): Long = preferences.getLong(key, defaultValue)
 
     /**
      * Returns the double that has been saved as a long raw bits value in the long preferences.
      *
      * @param key      The name of the preference to retrieve.
-     * @param defValue the double Value to return if this preference does not exist.
-     * @return Returns the preference value if it exists, or defValue.
+     * @param defaultValue the double Value to return if this preference does not exist.
+     * @return Returns the preference value if it exists, or defaultValue.
      * @throws ClassCastException if there is a preference with this name that is not a long.
      * @see android.content.SharedPreferences.getLong
      */
-    fun getDouble(key: String, defValue: Double): Double =
-            java.lang.Double.longBitsToDouble(preferences.getLong(key, java.lang.Double.doubleToLongBits(defValue)))
+    fun getDouble(key: String, defaultValue: Double): Double =
+            java.lang.Double.longBitsToDouble(preferences.getLong(key, java.lang.Double.doubleToLongBits(defaultValue)))
 
     /**
      * Retrieves a stored float value.
      *
-     * @param key      The name of the preference to retrieve.
-     * @param defValue Value to return if this preference does not exist.
-     * @return Returns the preference value if it exists, or defValue.
+     * @param key The name of the preference to retrieve.
+     * @param defaultValue Value to return if this preference does not exist.
+     * @return Returns the preference value if it exists, or defaultValue.
      * @throws ClassCastException if there is a preference with this name that is not a float.
      * @see android.content.SharedPreferences.getFloat
      */
-    fun getFloat(key: String, defValue: Float): Float = preferences.getFloat(key, defValue)
+    fun getFloat(key: String, defaultValue: Float): Float = preferences.getFloat(key, defaultValue)
 
     /**
      * Retrieves a stored String value.
      *
-     * @param key      The name of the preference to retrieve.
-     * @param defValue Value to return if this preference does not exist.
-     * @return Returns the preference value if it exists, or defValue.
+     * @param key The name of the preference to retrieve.
+     * @param defaultValue Value to return if this preference does not exist.
+     * @return Returns the preference value if it exists, or defaultValue.
      * @throws ClassCastException if there is a preference with this name that is not a String.
      * @see android.content.SharedPreferences.getString
      */
-    fun getString(key: String, defValue: String): String? = preferences.getString(key, defValue)
+    fun getString(key: String, defaultValue: String): String? = preferences.getString(key, defaultValue)
 
     /**
      * Retrieves a Set of Strings as stored by [putStringSet].
-     * **Note that the native implementation of [SharedPreferences.getStringSet] does not reliably preserve the order of the Strings in the Set.**
+     * NOTE: The native implementation of [SharedPreferences.getStringSet] does not reliably preserve
+     * the order of Strings in the Set.
      *
-     * @param key      The name of the preference to retrieve.
-     * @param defValue Value to return if this preference does not exist.
-     * @return Returns the preference values if they exist, or defValues otherwise.
+     * @param key The name of the preference to retrieve.
+     * @param defaultValue Value to return if this preference does not exist.
+     * @return Returns the preference values if they exist, or defaultValues otherwise.
      * @throws ClassCastException if there is a preference with this name that is not a Set.
      * @see android.content.SharedPreferences.getStringSet
      */
-    fun getStringSet(key: String, defValue: Set<String>): Set<String> = preferences.getStringSet(key, defValue)
+    fun getStringSet(key: String, defaultValue: Set<String>): Set<String> = preferences.getStringSet(key, defaultValue)
 
     /**
-     * @param key
-     * @param value
+     * Stores an Object.
+     *
+     * @param key The name of the preference to modify.
+     * @param value The new value for the preference.
+     * @see io.milkcan.effortlessprefs.library.PrefSerializer
      */
     fun putObject(key: String, value: Any) {
         return if (prefSerializer != null) {
@@ -144,9 +147,13 @@ object Prefs {
     }
 
     /**
-     * @param key
-     * @param defaultValue
-     * @return
+     * Retrieves a stored Object.
+     *
+     * @param key The name of the preference to retrieve.
+     * @param defaultValue Value to return if this preference does not exist.
+     * @return Deserialized representation of the object at [key], or [defaultValue] if unavailable
+     * or an exception is thrown while deserializing.
+     * @see io.milkcan.effortlessprefs.library.PrefSerializer
      */
     fun <T : Any> getObject(key: String, defaultValue: T): T {
         return if (prefSerializer != null) {
@@ -156,8 +163,13 @@ object Prefs {
     }
 
     /**
-     * @param key
-     * @return
+     * Retrieves a stored Object.
+     *
+     * @param key The name of the preference to retrieve.
+     * @param clazz Class that the preference will be deserialized as.
+     * @return Deserialized representation of the object at [key], or null if unavailable or an
+     * exception is thrown while deserializing.
+     * @see io.milkcan.effortlessprefs.library.PrefSerializer
      */
     fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
         return if (prefSerializer != null) {
@@ -169,7 +181,7 @@ object Prefs {
     /**
      * Stores a long value.
      *
-     * @param key   The name of the preference to modify.
+     * @param key The name of the preference to modify.
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putLong
      */
@@ -178,7 +190,7 @@ object Prefs {
     /**
      * Stores an integer value.
      *
-     * @param key   The name of the preference to modify.
+     * @param key The name of the preference to modify.
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putInt
      */
@@ -187,7 +199,7 @@ object Prefs {
     /**
      * Stores a double value as a long raw bits value.
      *
-     * @param key   The name of the preference to modify.
+     * @param key The name of the preference to modify.
      * @param value The double value to be save in the preferences.
      * @see android.content.SharedPreferences.Editor.putLong
      */
@@ -200,7 +212,7 @@ object Prefs {
     /**
      * Stores a float value.
      *
-     * @param key   The name of the preference to modify.
+     * @param key The name of the preference to modify.
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putFloat
      */
@@ -209,7 +221,7 @@ object Prefs {
     /**
      * Stores a boolean value.
      *
-     * @param key   The name of the preference to modify.
+     * @param key The name of the preference to modify.
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putBoolean
      */
@@ -218,7 +230,7 @@ object Prefs {
     /**
      * Stores a String value.
      *
-     * @param key   The name of the preference to modify.
+     * @param key The name of the preference to modify.
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putString
      */
@@ -229,7 +241,7 @@ object Prefs {
      *
      * **Note that the native implementation of [Editor.putStringSet] does not reliably preserve the order of the Strings in the Set.**
      *
-     * @param key   The name of the preference to modify.
+     * @param key The name of the preference to modify.
      * @param value The new value for the preference.
      * @see android.content.SharedPreferences.Editor.putStringSet
      */
@@ -247,7 +259,7 @@ object Prefs {
      * Checks if a value is stored for the given key.
      *
      * @param key The name of the preference to check.
-     * @return `true` if the storage contains this key value, `false` otherwise.
+     * @return True if the storage contains this key value.
      * @see android.content.SharedPreferences.contains
      */
     operator fun contains(key: String): Boolean = preferences.contains(key)
@@ -255,7 +267,7 @@ object Prefs {
     /**
      * Removed all the stored keys and values.
      *
-     * @return the [Editor] for chaining. The changes have already been committed/applied
+     * @return The [Editor] for chaining. The changes have already been committed/applied
      * through the execution of this function.
      * @see android.content.SharedPreferences.Editor.clear
      */
