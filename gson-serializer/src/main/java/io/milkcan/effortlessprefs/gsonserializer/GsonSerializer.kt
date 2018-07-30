@@ -10,7 +10,7 @@ import io.milkcan.effortlessprefs.library.PrefSerializer
 
 /**
  * @author Eric Bachhuber
- * @version 1.1.0
+ * @version 2.0.0
  * @since 1.1.0
  */
 class GsonSerializer(private val gson: Gson) : PrefSerializer {
@@ -48,7 +48,9 @@ class GsonSerializer(private val gson: Gson) : PrefSerializer {
     override fun <T : Any> getObject(key: String, defaultValue: T): T {
         val json = prefs.getString(key, "")
 
-        return try {
+        return if (json.isNullOrBlank()) {
+            defaultValue
+        } else try {
             gson.fromJson(json, defaultValue::class.java)
         } catch (ex: JsonSyntaxException) {
             Log.d(TAG, "Error deserializing object, returning default value. ${ex.message}", ex)
