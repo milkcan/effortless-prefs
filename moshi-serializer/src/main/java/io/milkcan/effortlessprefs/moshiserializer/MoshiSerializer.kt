@@ -71,7 +71,7 @@ class MoshiSerializer(private val moshi: Moshi) : PrefSerializer {
         val json = prefs.getString(key, "")
 
         return try {
-            adapter.fromJson(json) as T
+            adapter.fromJson(json)
         } catch (ex: IOException) {
             Log.d(TAG, "Error deserializing object, returning null. ${ex.message}", ex)
             null
