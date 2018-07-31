@@ -36,7 +36,7 @@ object Prefs {
      * @return an instance of the SharedPreferences
      * @throws IllegalStateException if SharedPreferences instance has not been instantiated yet.
      */
-    val preferences: SharedPreferences
+    private val preferences: SharedPreferences
         get() {
             if (sharedPreferences != null) {
                 return sharedPreferences as SharedPreferences
@@ -50,8 +50,7 @@ object Prefs {
      * @return Key/value map of all stored preferences.
      * @see android.content.SharedPreferences.getAll
      */
-    val all: Map<String, *>
-        get() = preferences.all
+    fun getAll(): Map<String, *> = preferences.all
 
     /**
      * Retrieves a stored int value.
@@ -68,7 +67,7 @@ object Prefs {
     /**
      * Retrieves a stored boolean value.
      *
-     * @param key      The name of the preference to retrieve.
+     * @param key The name of the preference to retrieve.
      * @param defaultValue Value to return if this preference does not exist.
      * @return Returns the preference value if it exists, or defaultValue.
      * @throws ClassCastException if there is a preference with this name that is not a boolean.
@@ -79,7 +78,7 @@ object Prefs {
     /**
      * Retrieves a stored long value.
      *
-     * @param key      The name of the preference to retrieve.
+     * @param key The name of the preference to retrieve.
      * @param defaultValue Value to return if this preference does not exist.
      * @return Returns the preference value if it exists, or defaultValue.
      * @throws ClassCastException if there is a preference with this name that is not a long.
@@ -90,7 +89,7 @@ object Prefs {
     /**
      * Returns the double that has been saved as a long raw bits value in the long preferences.
      *
-     * @param key      The name of the preference to retrieve.
+     * @param key The name of the preference to retrieve.
      * @param defaultValue the double Value to return if this preference does not exist.
      * @return Returns the preference value if it exists, or defaultValue.
      * @throws ClassCastException if there is a preference with this name that is not a long.
@@ -161,8 +160,10 @@ object Prefs {
     inline fun <reified T> getObject(key: String): T? {
         return if (prefSerializer != null) {
             prefSerializer!!.getObject<T>(key, T::class.java)
-        } else throw IllegalStateException("PrefSerializer not correctly instantiated. Please call " +
-                "Builder.setPrefSerializer().build() in your Application class onCreate().")
+        } else {
+            throw IllegalStateException("PrefSerializer not properly instantiated. Please call " +
+                    "Builder.setPrefSerializer().build() in your Application class onCreate().")
+        }
     }
 
     /**

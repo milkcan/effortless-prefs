@@ -20,7 +20,7 @@ class MoshiSerializer(private val moshi: Moshi) : PrefSerializer {
         @JvmStatic val TAG: String = MoshiSerializer::class.java.simpleName
     }
 
-    lateinit var prefs: SharedPreferences
+    private lateinit var prefs: SharedPreferences
 
     override fun setSharedPreferenceInstance(sharedPreferences: SharedPreferences) {
         prefs = sharedPreferences
@@ -52,7 +52,7 @@ class MoshiSerializer(private val moshi: Moshi) : PrefSerializer {
         val json = prefs.getString(key, "")
 
         return try {
-            adapter.fromJson(json) as T
+            adapter.fromJson(json) ?: defaultValue
         } catch (ex: IOException) {
             Log.d(TAG, "Error deserializing object, returning default value. ${ex.message}", ex)
             defaultValue

@@ -25,6 +25,7 @@ allprojects {
     }
 }
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 def getLocalProperty(String propertyName) {
     def propsFile = rootProject.file('local.properties')
     if (propsFile.exists()) {
