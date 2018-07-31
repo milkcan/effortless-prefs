@@ -6,7 +6,9 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import io.milkcan.effortlessprefs.library.PrefSerializer
+import java.lang.reflect.Type
 
 /**
  * @author Eric Bachhuber
@@ -19,7 +21,7 @@ class GsonSerializer(private val gson: Gson) : PrefSerializer {
         @JvmStatic val TAG: String = GsonSerializer::class.java.simpleName
     }
 
-    lateinit var prefs: SharedPreferences
+    private lateinit var prefs: SharedPreferences
 
     override fun setSharedPreferenceInstance(sharedPreferences: SharedPreferences) {
         prefs = sharedPreferences
@@ -31,8 +33,8 @@ class GsonSerializer(private val gson: Gson) : PrefSerializer {
      * @param key The name of the preference to modify.
      * @param value The new value for the preference.
      */
-    override fun putObject(key: String, value: Any) {
-        val json = gson.toJson(value)
+    override fun <T> putObject(key: String, value: T, type: Type) {
+        val json = gson.toJson(value, type)
 
         prefs.edit().putString(key, json).apply()
     }
@@ -45,13 +47,15 @@ class GsonSerializer(private val gson: Gson) : PrefSerializer {
      * @return Deserialized representation of the object at [key], or [defaultValue] if unavailable
      * or a [JsonSyntaxException] is thrown while deserializing.
      */
-    override fun <T : Any> getObject(key: String, defaultValue: T): T {
+    override fun <T> getObject(key: String, defaultValue: T, type: Type): T {
         val json = prefs.getString(key, "")
+
+        Log.e("TAG", "TYPE: ${type::class.java.simpleName} ${TypeToken.get(type)}")
 
         return if (json.isNullOrBlank()) {
             defaultValue
         } else try {
-            gson.fromJson(json, defaultValue::class.java)
+            gson.getAdapter(TypeToken.get(type)).fromJson(json) as T
         } catch (ex: JsonSyntaxException) {
             Log.d(TAG, "Error deserializing object, returning default value. ${ex.message}", ex)
             defaultValue
@@ -62,15 +66,16 @@ class GsonSerializer(private val gson: Gson) : PrefSerializer {
      * Retrieves a stored Object.
      *
      * @param key The name of the preference to retrieve.
-     * @param clazz Class that the preference will be deserialized as.
      * @return Deserialized representation of the object at [key], or null if unavailable or a
      * [JsonSyntaxException] is thrown while deserializing.
      */
-    override fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
+    override fun <T> getObject(key: String, type: Type): T? {
         val json = prefs.getString(key, "")
 
+        Log.e("TAG", "TYPE: ${type::class.java.simpleName} ${TypeToken.get(type)}")
+
         return try {
-            gson.fromJson(json, clazz)
+            gson.getAdapter(TypeToken.get(type)).fromJson(json) as T
         } catch (ex: JsonSyntaxException) {
             Log.d(TAG, "Error deserializing object, returning null. ${ex.message}", ex)
             null

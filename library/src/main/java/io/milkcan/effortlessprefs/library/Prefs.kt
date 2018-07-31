@@ -16,10 +16,12 @@ import android.text.TextUtils
  */
 object Prefs {
 
+    var prefSerializer: PrefSerializer? = null
+        private set
+
     private const val DEFAULT_SUFFIX = "_preferences"
     private const val LENGTH = "#LENGTH"
     private var sharedPreferences: SharedPreferences? = null
-    private var prefSerializer: PrefSerializer? = null
 
     private fun initPrefs(context: Context, prefsName: String, mode: Int, prefSerializer: PrefSerializer?) {
         sharedPreferences = context.getSharedPreferences(prefsName, mode)
@@ -141,9 +143,9 @@ object Prefs {
      * or an exception is thrown while deserializing.
      * @see io.milkcan.effortlessprefs.library.PrefSerializer
      */
-    fun <T : Any> getObject(key: String, defaultValue: T): T {
+    inline fun <reified T> getObject(key: String, defaultValue: T): T {
         return if (prefSerializer != null) {
-            prefSerializer!!.getObject(key, defaultValue)
+            prefSerializer!!.getObject(key, defaultValue, T::class.java)
         } else throw IllegalStateException("PrefSerializer not correctly instantiated. Please call " +
                 "Builder.setPrefSerializer().build() in your Application class onCreate().")
     }
@@ -152,14 +154,13 @@ object Prefs {
      * Retrieves a stored Object.
      *
      * @param key The name of the preference to retrieve.
-     * @param clazz Class that the preference will be deserialized as.
      * @return Deserialized representation of the object at [key], or null if unavailable or an
      * exception is thrown while deserializing.
      * @see io.milkcan.effortlessprefs.library.PrefSerializer
      */
-    fun <T : Any> getObject(key: String, clazz: Class<T>): T? {
+    inline fun <reified T> getObject(key: String): T? {
         return if (prefSerializer != null) {
-            prefSerializer!!.getObject(key, clazz)
+            prefSerializer!!.getObject<T>(key, T::class.java)
         } else throw IllegalStateException("PrefSerializer not correctly instantiated. Please call " +
                 "Builder.setPrefSerializer().build() in your Application class onCreate().")
     }
@@ -171,9 +172,9 @@ object Prefs {
      * @param value The new value for the preference.
      * @see io.milkcan.effortlessprefs.library.PrefSerializer
      */
-    fun putObject(key: String, value: Any) {
+    inline fun <reified T> putObject(key: String, value: T) {
         return if (prefSerializer != null) {
-            prefSerializer!!.putObject(key, value)
+            prefSerializer!!.putObject(key, value, T::class.java)
         } else throw IllegalStateException("PrefSerializer not correctly instantiated. Please call " +
                 "Builder.setPrefSerializer().build() in your Application class onCreate().")
     }

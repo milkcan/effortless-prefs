@@ -35,9 +35,9 @@ dependencies {
     implementation project(':gson-serializer')
     implementation project(':moshi-serializer')
 
-    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Effortless Android
     implementation "io.milkcan:effortless-android:$effortless_android_version"
